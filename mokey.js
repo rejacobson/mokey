@@ -18,6 +18,31 @@
     var bindings          = {};
     var next_keys;
 
+    var char_counter = (function(){
+      var _timeout = 300;
+      var _count;
+      var _char;
+      var _time;
+
+      function _reset_count() {
+        _count = _char = _time = 0;
+      };
+
+      return {
+        count: function(char, timestamp) {
+          if (char != _char || timestamp - _time > _timeout) _reset_count();
+          _char = char;
+          _time = timestamp;
+          _count++;
+          return _count > 1;
+        },
+
+        code: function() {
+          if (_count > 1) return _char +'X'+ _count;
+        }
+      };
+    })();
+
     function _bind(input, callback) {
       input = _clean_input(input);
       var keys = input.split(' ');
@@ -114,6 +139,17 @@
         : null;
     };
 
+    function _reset() {
+      next_keys = bindings.keys;
+    };
+
+    function _run_callback(event, key) {
+      if (next_keys[key] && next_keys[key].callback) {
+        next_keys[key].callback(event);
+        return true;
+      }
+    };
+
     function _sequencer(key) {
       if (next_keys[key] && next_keys[key].keys) {
         next_keys = next_keys[key].keys;
@@ -122,9 +158,15 @@
 
     function _handle_event(event, key) {
       if (!key) return;
-      if (!next_keys) next_keys = bindings.keys;
-      if (next_keys[key] && next_keys[key].callback) next_keys[key].callback(event);
-      _sequencer(key);
+      if (!next_keys) _reset();
+      var run_seq = true;
+      if (_run_callback(event, key)) {
+        if (!next_keys[key].keys) {
+          _reset();
+          run_seq = false;
+        }
+      }
+      if (run_seq) _sequencer(key);
     };
 
     function _onkeydown(event) {
@@ -132,7 +174,10 @@
       if (keysdown[key]) return; // Return early if this key is already down
       keysdown[key] = event.timeStamp;
       key = _get_combo() || key;
-      if (!next_keys || !next_keys[key]) next_keys = bindings.keys;
+      if (char_counter.count(key, event.timeStamp)) {
+        key = char_counter.code();
+      }
+      if (!next_keys || !next_keys[key]) _reset();
       _handle_event(event, key);
     };
 
@@ -147,7 +192,10 @@
       var key = _MOUSE[event.which];
       keysdown[key] = event.timeStamp;
       key = _get_combo() || key;
-      if (!next_keys || !next_keys[key]) next_keys = bindings.keys;
+      if (char_counter.count(key, event.timeStamp)) {
+        key = char_counter.code();
+      }
+      if (!next_keys || !next_keys[key]) _reset();
       _handle_event(event, key);
     };
 

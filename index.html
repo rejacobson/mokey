@@ -27,67 +27,119 @@
 
 
   <div class="samples">
-    <pre id="_1">
-      Mokey.on('q', function() {
-        highlight('_1');
-      });
-    </pre>
+    <table>
+      <tr>
+        <td>
+          <pre>
+Mokey.on('q', function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on('keyup.q', function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on('qX2', function() {
+  highlight();
+});
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <pre>
+Mokey.on('shift+x+k', function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on('z x c', function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on('a b c shift+x+k', function() {
+  highlight();
+});
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <pre>
+Mokey.on(['p', 'w e', 't+y'], function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on(['lclick', 'rclick'], function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on('lclick+n', function() {
+  highlight();
+});
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <pre>
+Mokey.on('lclickX2', function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on('lclickX3', function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on('lclickX4', function() {
+  highlight();
+});
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <pre>
+Mokey.on('wheelup', function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
+          <pre>
+Mokey.on('wheeldown', function() {
+  highlight();
+});
+          </pre>
+        </td>
+        <td>
 
-    <pre id="_2">
-      Mokey.on('keyup.q', function() {
-        highlight('_2');
-      });
-    </pre>
-
-
-    <pre id="_3">
-      Mokey.on('shift+x+k', function() {
-        highlight('_3');
-      });
-    </pre>
-
-    <pre id="_4">
-      Mokey.on('z x c', function() {
-        highlight('_4');
-      });
-    </pre>
-
-    <pre id="_5">
-      Mokey.on('a b c shift+x+k', function() {
-        highlight('_5');
-      });
-    </pre>
-
-    <pre id="_6">
-      Mokey.on(['p', 'w e', 't+y'], function() {
-        highlight('_6');
-      });
-    </pre>
-
-    <pre id="_7">
-      Mokey.on(['lclick', 'rclick'], function() {
-        highlight('_7');
-      });
-    </pre>
-
-    <pre id="_8">
-      Mokey.on(['lclick+m', 'rclick'], function() {
-        highlight('_8');
-      });
-    </pre>
-
-
-    <pre id="_9">
-      Mokey.on('wheelup', function() {
-        highlight('_9');
-      });
-    </pre>
-
-    <pre id="_10">
-      Mokey.on('wheeldown', function() {
-        highlight('_10');
-      });
-    </pre>
+        </td>
+      </tr>
+    </table>
   </div>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -103,8 +155,13 @@ $(function(){
     }, 1000);
   };
 
+  var _id=0;
   $('.samples pre').each(function() {
-    var text = $(this).text();
+    var $this = $(this);
+    var text  = $(this).text();
+    var id    = '_'+ (++_id);
+    $this.attr('id', id);
+    text = text.replace('highlight()', 'highlight("'+ id +'")');
     eval(text);
   });
 
