@@ -13,16 +13,38 @@
     }
 }(this, function () {
 
-  var Sequence = (function() {
-    var COMBO_PART           = 1;
-    var FINISHED        = 2;
+  var Mokey = (function() {
+    var keysdown          = {};
+    var bindings          = {};
+    var next_keys;
 
-    var _timeout        = 1000;
-    var _timer          = null;
-    var _levels         = {};
-    var _activeLevel    = _levels;
-    var _activeSequence = '';
-    var _expectedKeys   = {};
+    function _bind(input, callback) {
+      input = _clean_input(input);
+      var keys = input.split(' ');
+      var cur = bindings;
+
+      for (var i=0, len=keys.length; i<len; i++) {
+        if (!cur.keys) cur.keys = {};
+        cur = cur.keys;
+
+        var key     = keys[i];
+        var isFirst = i == 0;
+        var isLast  = i+1 == len;
+
+        if (!isFirst && key.match(/\+/)) {
+          key = _sort_combo(key);
+          _combo_permutations_array(key.split('+')).forEach(function(k) {
+            if (!cur[k]) cur[k] = 1;
+          });
+        }
+
+        if (!cur[key] || cur[key] === 1) cur[key] = {};
+
+        cur = cur[key];
+
+        if (isLast) cur['callback'] = callback;
+      }
+    };
 
     function _permutations(input, size){
       var results = [], result, mask, total = Math.pow(2, input.length);
@@ -58,95 +80,6 @@
       return perms;
     };
 
-    function _build_sequence_levels(sequence) {
-      var keys = sequence.split(' ');
-      var last = _levels;
-
-      for (var i=0, len=keys.length; i<len; i++) {
-        if (last === true) {
-          last = null;
-          break;
-        }
-
-        var key     = keys[i];
-        var isLast  = i+1 == len;
-
-        if (key.match(/\+/)) {
-          var parts = key.split('+');
-          key       = parts.sort().join('+');
-          _combo_permutations_array(parts).forEach(function(k) {
-            if (!last[k]) last[k] = COMBO_PART;
-          });
-        }
-        if (!last[key] || last[key] === COMBO_PART) last[key] = isLast ? FINISHED : {};
-
-        last = last[key];
-      }
-
-      if (!last) console.log('Conflicting sequence: '+ sequence);
-    };
-
-    function _save_key(key) {
-      _activeSequence += _activeSequence.length == 0
-        ? key
-        : ' '+ key;
-    };
-
-    function _reset() {
-      _activeLevel    = _levels;
-      _activeSequence = '';
-      _expectedKeys   = {};
-      clearTimeout(_timer);
-    };
-
-    function _extend_timer() {
-      clearTimeout(_timer);
-      _timer = setTimeout(_reset, _timeout);
-    };
-
-    return {
-      add: function(sequence) {
-        _build_sequence_levels(sequence);
-      },
-
-      reset: function() {
-        _reset();
-      },
-
-      levels: function() { return _levels; },
-
-      activeSequence: function() {
-        return _activeSequence;
-      },
-
-      advance: function(key) {
-        if (_activeLevel[key]) {
-          _extend_timer();
-          if (_activeLevel[key] !== COMBO_PART) {
-            _save_key(key);
-            _activeLevel = _activeLevel[key];
-            _expectedKeys = {};
-            if (key.match(/\w\+/)) {
-              _expectedKeys = _combo_permutations_hash(key.split('+'));
-            }
-          }
-          if (_activeLevel === FINISHED) return true;
-        } else {
-          if (_expectedKeys[key]) {
-            delete _expectedKeys[key];
-          } else {
-            console.log('RESET');
-            _reset();
-          }
-        }
-      }
-    };
-  })();
-
-  var Mokey = (function() {
-    var keysdown          = {};
-    var bindings          = {};
-
     function _sort_combo(combo) {
       return combo.split('+').sort().join('+');
     };
@@ -171,7 +104,7 @@
     };
 
     function _get_combo_keys() {
-      return Object.keys(keysdown).sort();
+      return Object.getOwnPropertyNames(keysdown).sort();
     };
 
     function _get_combo() {
@@ -181,28 +114,76 @@
         : null;
     };
 
-    function _run_callbacks(event, callbacks) {
-      for (var i=0, len=callbacks.length; i<len; i++) {
-        callbacks[i](event);
+    function _sequencer(key) {
+      if (next_keys[key] && next_keys[key].keys) {
+        next_keys = next_keys[key].keys;
       }
-    };
+    }
 
     function _handle_event(event, key) {
       if (!key) return;
-      if (Sequence.advance(key)) {
-        _run_callbacks(event, bindings[Sequence.activeSequence()]);
-        Sequence.reset();
-      }
-      if (bindings[key]) _run_callbacks(event, bindings[key]);
+      if (!next_keys) next_keys = bindings.keys;
+      if (next_keys[key] && next_keys[key].callback) next_keys[key].callback(event);
+      _sequencer(key);
     };
 
-    function _bind(input, callback) {
-      input = _clean_input(input);
-console.log('BINDING '+ input);
-      if (!bindings[input]) bindings[input] = [];
-      bindings[input].push(callback);
-      if (input.match(/\s/)) Sequence.add(input);
-    }
+    function _onkeydown(event) {
+      var key = _KEYS[event.which];
+      if (keysdown[key]) return; // Return early if this key is already down
+      keysdown[key] = event.timeStamp;
+      key = _get_combo() || key;
+      if (!next_keys || !next_keys[key]) next_keys = bindings.keys;
+      _handle_event(event, key);
+    };
+
+    function _onkeyup(event) {
+      var key = _KEYS[event.which];
+      event.timeDown = event.timeStamp - keysdown[key];
+      delete keysdown[key];
+      _handle_event(event, 'keyup.'+ key);
+    };
+
+    function _onmousedown(event) {
+      var key = _MOUSE[event.which];
+      keysdown[key] = event.timeStamp;
+      key = _get_combo() || key;
+      if (!next_keys || !next_keys[key]) next_keys = bindings.keys;
+      _handle_event(event, key);
+    };
+
+    function _onmouseup(event) {
+      var key = _MOUSE[event.which];
+      event.timeDown = event.timeStamp - keysdown[key];
+      delete keysdown[key];
+      _handle_event(event, 'keyup.'+ key);
+    };
+
+    function _onmousewheel(event) {
+      event.scrollDelta = event.detail ? event.detail*(-20) : event.wheelDeltaY;
+      var key           = _MOUSE_WHEEL[event.scrollDelta / Math.abs(event.scrollDelta)];
+      if (bindings.keys[key] && bindings.keys[key].callback) bindings.keys[key].callback(event);
+    };
+
+    function _onmousemove(event){
+      if (bindings.keys['mmove'] && bindings.keys['mmove'].callback) bindings.keys['mmove'].callback(event);
+    };
+
+    function _addEvent(object, type, callback) {
+      if (object.addEventListener) {
+        object.addEventListener(type, callback, false);
+        return;
+      }
+      object.attachEvent('on'+ type, callback);
+    };
+
+    var mousewheelevent = (/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel";
+
+    _addEvent(document, 'keydown',        _onkeydown);
+    _addEvent(document, 'keyup',          _onkeyup);
+    _addEvent(document, 'mousedown',      _onmousedown);
+    _addEvent(document, 'mouseup',        _onmouseup);
+    _addEvent(document, 'mousemove',      _onmousemove);
+    _addEvent(document, mousewheelevent,  _onmousewheel);
 
     return {
       on: function(input, callback) {
@@ -215,45 +196,6 @@ console.log('BINDING '+ input);
 
       bindings: function() {
         return bindings;
-      },
-
-      _onkeydown: function(event) {
-        var key = _KEYS[event.which];
-        if (keysdown[key]) return; // Return early if this key is already down
-        keysdown[key] = event.timeStamp;
-        _handle_event(event, _get_combo());
-        _handle_event(event, key);
-      },
-
-      _onkeyup: function(event) {
-        var key = _KEYS[event.which];
-        event.timeDown = event.timeStamp - keysdown[key];
-        delete keysdown[key];
-        //_run_callbacks(event, bindings[key]);
-      },
-
-      _onmousedown: function(event) {
-        var key = _MOUSE[event.which];
-        keysdown[key] = event.timeStamp;
-        _handle_event(event, _get_combo());
-        _handle_event(event, key);
-      },
-
-      _onmouseup: function(event) {
-        var key = _MOUSE[event.which];
-        event.timeDown = event.timeStamp - keysdown[key];
-        delete keysdown[key];
-        //_run_callbacks(event, bindings[key]);
-      },
-
-      _onmousewheel: function(event) {
-        event.scrollDelta = event.detail ? event.detail*(-20) : event.wheelDeltaY;
-        var key           = _MOUSE_WHEEL[event.scrollDelta / Math.abs(event.scrollDelta)];
-        if (bindings[key]) _run_callbacks(event, bindings[key]);
-      },
-
-      _onmousemove: function(event){
-        if (bindings['mmove']) _run_callbacks(event, bindings['mmove']);
       }
     };
 
@@ -360,30 +302,6 @@ console.log('BINDING '+ input);
     105:  'kp9'
   };
 
-  var _REVERSED_KEYS = (function() {
-    var reversed = {};
-    Object.keys(_KEYS).forEach(function(key) {
-      reversed[_KEYS[key]] = key;
-    });
-    return reversed;
-  })();
-
-  function _addEvent(object, type, callback) {
-    if (object.addEventListener) {
-      object.addEventListener(type, callback, false);
-      return;
-    }
-    object.attachEvent('on'+ type, callback);
-  }
-
-  var mousewheelevent = (/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel";
-
-  _addEvent(document, 'keydown',        Mokey._onkeydown);
-  _addEvent(document, 'keyup',          Mokey._onkeyup);
-  _addEvent(document, 'mousedown',      Mokey._onmousedown);
-  _addEvent(document, 'mouseup',        Mokey._onmouseup);
-  _addEvent(document, 'mousemove',      Mokey._onmousemove);
-  _addEvent(document, mousewheelevent,  Mokey._onmousewheel);
-
   return Mokey;
+
 }));

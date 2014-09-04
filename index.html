@@ -17,7 +17,7 @@
   }
   pre {
     padding: 5px;
-    transition: background 0.8s ease-in 0.3s;
+    transition: background 0.3s ease-in 0.0s;
   }
   </style>
 </head>
@@ -34,44 +34,58 @@
     </pre>
 
     <pre id="_2">
-      Mokey.on('shift+x+k', function() {
+      Mokey.on('keyup.q', function() {
         highlight('_2');
       });
     </pre>
 
+
     <pre id="_3">
-      Mokey.on('z x c', function() {
+      Mokey.on('shift+x+k', function() {
         highlight('_3');
       });
     </pre>
 
     <pre id="_4">
-      Mokey.on('a b c shift+x+k', function() {
+      Mokey.on('z x c', function() {
         highlight('_4');
       });
     </pre>
 
     <pre id="_5">
-      Mokey.on(['p', 'w e', 't+y'], function() {
+      Mokey.on('a b c shift+x+k', function() {
         highlight('_5');
       });
     </pre>
 
     <pre id="_6">
-      Mokey.on(['lclick', 'rclick'], function() {
+      Mokey.on(['p', 'w e', 't+y'], function() {
         highlight('_6');
       });
     </pre>
 
     <pre id="_7">
-      Mokey.on('wheelup', function() {
+      Mokey.on(['lclick', 'rclick'], function() {
         highlight('_7');
       });
     </pre>
 
     <pre id="_8">
-      Mokey.on('wheeldown', function() {
+      Mokey.on(['lclick+m', 'rclick'], function() {
         highlight('_8');
+      });
+    </pre>
+
+
+    <pre id="_9">
+      Mokey.on('wheelup', function() {
+        highlight('_9');
+      });
+    </pre>
+
+    <pre id="_10">
+      Mokey.on('wheeldown', function() {
+        highlight('_10');
       });
     </pre>
   </div>
