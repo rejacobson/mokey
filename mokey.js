@@ -173,12 +173,17 @@
       var key = _KEYS[event.which];
       if (keysdown[key]) return; // Return early if this key is already down
       keysdown[key] = event.timeStamp;
-      key = _get_combo() || key;
+
       if (char_counter.count(key, event.timeStamp)) {
         key = char_counter.code();
       }
+
       if (!next_keys || !next_keys[key]) _reset();
+
       _handle_event(event, key);
+
+      var combo = _get_combo();
+      if (combo) _handle_event(event, combo);
     };
 
     function _onkeyup(event) {
@@ -213,7 +218,7 @@
     };
 
     function _onmousemove(event){
-      if (bindings.keys['mmove'] && bindings.keys['mmove'].callback) bindings.keys['mmove'].callback(event);
+      //if (bindings.keys['mmove'] && bindings.keys['mmove'].callback) bindings.keys['mmove'].callback(event);
     };
 
     function _addEvent(object, type, callback) {
