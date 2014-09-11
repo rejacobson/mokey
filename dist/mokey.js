@@ -215,7 +215,7 @@
       var key = MOUSE[event.which];
       event.timeDown = event._ts - keysdown[key];
       delete keysdown[key];
-      _handle_event(event, 'keyup.'+ key);
+      _handle_event(event, 'mouseup.'+ key);
     };
 
     function _onmousewheel(event) {
@@ -226,7 +226,7 @@
     };
 
     function _onmousemove(event){
-      //if (bindings.keys['mmove'] && bindings.keys['mmove'].callback) bindings.keys['mmove'].callback(event);
+      if (bindings.keys['mmove'] && bindings.keys['mmove'].callback) bindings.keys['mmove'].callback(event);
     };
 
     function _addEvent(object, type, callback) {
@@ -243,7 +243,7 @@
     _addEvent(document, 'keyup',          _onkeyup);
     _addEvent(document, 'mousedown',      _onmousedown);
     _addEvent(document, 'mouseup',        _onmouseup);
-    _addEvent(document, 'mousemove',      _onmousemove);
+    //_addEvent(document, 'mousemove',      _onmousemove);
     _addEvent(document, mousewheelevent,  _onmousewheel);
 
     return {
@@ -366,6 +366,10 @@
     104:  'kp8',
     105:  'kp9'
   };
+
+  Object.freeze(KEYS);
+  Object.freeze(MOUSE);
+  Object.freeze(MOUSE_WHEEL);
 
   Mokey.KEYS        = KEYS;
   Mokey.MOUSE       = MOUSE;
