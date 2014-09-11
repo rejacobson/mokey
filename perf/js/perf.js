@@ -1,134 +1,95 @@
 var s = [];
 
 s.push(
-  createSuite('outOfBounds', 'utility',
+  createSuite('on', 'operations',
 
-  'indexOutOfBounds(100)', function() {
-    grid.indexOutOfBounds(100);
-  },
-
-  'indexOutOfBounds(-100)', function() {
-    grid.indexOutOfBounds(-100);
-  },
-
-  'positionOutOfBounds([100, 100])', function() {
-    grid.positionOutOfBounds([100, 100]);
-  },
-
-  'positionOutOfBounds([-100, -100])', function() {
-    grid.positionOutOfBounds([-100, -100]);
+  '.on()', function() {
+    Mokey.on('z', function() {});
+    Mokey.bindings['z'] = undefined;
   })
 );
 
 s.push(
-  createSuite('indexToPosition', 'utility',
+  createSuite('keypress', 'operations',
 
-  'indexToPosition(100)', function(){
-    grid.indexToPosition(100);
+  'a keydown', function(){
+    runEvent(a_keydown);
+    runEvent(a_keyup);
   },
 
-  'positionToIndex([800, 20])', function(){
-    grid.positionToIndex([800, 20]);
+  'z keydown - non-existent key binding', function() {
+    runEvent(z_keydown);
+    runEvent(z_keyup);
   })
 );
 
 s.push(
-  createSuite('insert', 'operations',
+  createSuite('combo', 'operations',
 
-  'insert(100, entity)', function(){
-    grid.insert(100, entity);
+  'b+c combo', function(){
+    runEvent(b_keydown);
+    runEvent(c_keydown);
+    runEvent(b_keyup);
+    runEvent(c_keyup);
   },
 
-  'insert(-100, entity) - out of bounds insert', function() {
-    grid.insert(-100, entity);
+  'y+z combo - non-existent key binding', function() {
+    runEvent(y_keydown);
+    runEvent(z_keydown);
+    runEvent(y_keyup);
+    runEvent(z_keyup);
   })
 );
 
 s.push(
-  createSuite('remove', 'operations',
+  createSuite('sequence', 'operations',
 
-  'remove(10, grid._map[10][0])', function(){
-    grid.remove(10, grid._map[10][0]);
+  'd e f g sequence', function(){
+    runEvent(d_keydown);
+    runEvent(d_keyup);
+    runEvent(e_keydown);
+    runEvent(e_keyup);
+    runEvent(f_keydown);
+    runEvent(f_keyup);
+    runEvent(g_keydown);
+    runEvent(g_keyup);
   },
 
-  'remove(10, entity) - non-existant entity', function() {
-    grid.remove(10, entity);
-  },
-
-  'remove(-10, entity) - out of bounds entity', function() {
-    grid.remove(-10, entity);
+  'w x y z sequence - non-existent key binding', function() {
+    runEvent(w_keydown);
+    runEvent(w_keyup);
+    runEvent(x_keydown);
+    runEvent(x_keyup);
+    runEvent(y_keydown);
+    runEvent(y_keyup);
+    runEvent(z_keydown);
+    runEvent(z_keyup);
   })
 );
 
 s.push(
-  createSuite('getCell', 'queries',
+  createSuite('sequence_combo', 'operations',
 
-  'getCell(400) - by index', function(){
-    grid.getCell(400);
+  'h i j+k sequence, combo', function(){
+    runEvent(h_keydown);
+    runEvent(h_keyup);
+    runEvent(i_keydown);
+    runEvent(i_keyup);
+    runEvent(j_keydown);
+    runEvent(k_keydown);
+    runEvent(j_keyup);
+    runEvent(k_keyup);
   },
 
-  'getCell(10) - lots of entities, by index', function(){
-    grid.getCell(10);
-  })
-);
-
-s.push(
-  createSuite('getCells', 'queries',
-
-  'getCells() - 1 cell', function(){
-    grid.getCells([100]);
-  },
-
-  'getCells() - 7 cells', function(){
-    grid.getCells([100, 200, 300, 400, 500, 600, 700]);
-  })
-);
-
-s.push(
-  createSuite('getAdjacentCells', 'queries',
-
-  'getAdjacentCells(100)', function(){
-    grid.getAdjacentCells(100);
-  },
-
-  'getAdjacentCells(11) - lots of entities', function(){
-    grid.getAdjacentCells(11);
-  })
-);
-
-s.push(
-  createSuite('getAdjacentIndices', 'queries',
-
-  'getAdjacentIndices(1000)', function(){
-    grid.getAdjacentIndices(1000);
-  })
-);
-
-s.push(
-  createSuite('getLinearIndices', 'queries',
-
-  'getLinearIndices(0, [1, 0])', function(){
-    grid.getLinearIndices(0, [1, 0]);
-  },
-
-  'getLinearIndices(0, [0, 1])', function(){
-    grid.getLinearIndices(0, [0, 1]);
-  },
-
-  'getLinearIndices(0, [1, 1])', function(){
-    grid.getLinearIndices(0, [1, 1]);
-  },
-
-  'getLinearIndices(0, [1, 1], 10)', function(){
-    grid.getLinearIndices(0, [1, 1], 10);
-  })
-);
-
-s.push(
-  createSuite('getResidents', 'queries',
-
-  'getResidents()', function(){
-    grid.getResidents();
+  'w x y+z sequence, combo - non-existent key binding', function() {
+    runEvent(w_keydown);
+    runEvent(w_keyup);
+    runEvent(x_keydown);
+    runEvent(x_keyup);
+    runEvent(y_keydown);
+    runEvent(y_keydown);
+    runEvent(z_keyup);
+    runEvent(z_keyup);
   })
 );
 

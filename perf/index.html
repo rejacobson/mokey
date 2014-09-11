@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>GridPartition.js - Performance Testing</title>
+  <title>Mokey.js - Performance Testing</title>
   <style type="text/css">
     @import '../css/style.css';
   </style>
@@ -11,33 +11,19 @@
   <script src="../vendor/platform.js" type="text/javascript"></script>
   <script src="../vendor/benchmark.js" type="text/javascript"></script>
   <script src="../vendor/handlebars-v2.0.0.js" type="text/javascript"></script>
-  <script src="../dist/gridpartition.js" type="text/javascript"></script>
+  <script src="../dist/mokey.js" type="text/javascript"></script>
   <script src="./js/perf-helpers.js" type="text/javascript"></script>
   <script src="./js/perf.js" type="text/javascript"></script>
 </head>
 <body>
   <div id="nav">
-    <a class="title" href="#_utility">Utility Methods</a>
     <ul>
-      <li><a href="#outOfBounds">outOfBounds</a></li>
-      <li><a href="#indexToPosition">indexToPosition</a></li>
-      <li><a href="#indexToPosition">positionToIndex</a></li>
+      <li><a href="#on">on</a></li>
+      <li><a href="#keypress">keypress</a></li>
+      <li><a href="#combo">key combo</a></li>
+      <li><a href="#sequence">key sequence</a></li>
+      <li><a href="#sequence_combo">sequence + combo</a></li>
     </ul>
-
-    <a class="title" href="#_operations">Adding and Removing</a>
-    <ul>
-      <li><a href="#insert">insert</a></li>
-      <li><a href="#remove">remove</a></li>
-    </ul>
-
-    <a class="title" href="#_queries">Queries</a>
-    <ul>
-      <li><a href="#getCell">getCell</a></li>
-      <li><a href="#getCells">getCells</a></li>
-      <li><a href="#getAdjacentCells">getAdjacentCells</a></li>
-      <li><a href="#getAdjacentIndices">getAdjacentIndices</a></li>
-      <li><a href="#getLinearIndices">getLinearIndices</a></li>
-      <li><a href="#getResidents">getResidents</a></li>
   </div>
 
   <div id="content">
@@ -46,33 +32,14 @@
     Initial setup.
 
     <pre>
-function rand(min,max) {
-  return Math.floor(Math.random()*(max-min+1)+min);
-}
-
-var Entity = function() {
-  this.x = 0;
-  this.y = 0;
-};
-
-var entity  = new Entity();
-var grid    = new GridPartition([1200, 1200], [20, 20]);
-
-for (var i=0; i<4000; i++) {
-  grid.insert(rand(0, grid._maxindex), new Entity());
-  if (i % 4 == 0) grid.insert(10, new Entity());
-};
-
+Mokey.on('a', function() {});
+Mokey.on('b+c', function() {});
+Mokey.on('d e f g', function() {});
+Mokey.on('h i j+k', function() {});
     </pre>
-
-    <h2 id="_utility">Utility Methods</h2>
-    <div id="utility"></div>
 
     <h2 id="_operations">Adding and Removing</h2>
     <div id="operations"></div>
-
-    <h2 id="_queries">Queries</h2>
-    <div id="queries"></div>
 
 </body>
 </html>
