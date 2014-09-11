@@ -145,6 +145,7 @@
 
     function _run_callback(event, key) {
       if (next_keys[key] && next_keys[key].callback) {
+        event.mokey = key;
         next_keys[key].callback(event);
         return true;
       }
@@ -169,12 +170,15 @@
       if (run_seq) _sequencer(key);
     };
 
-    function _onkeydown(event) {
-      var key = _KEYS[event.which];
-      if (keysdown[key]) return; // Return early if this key is already down
-      keysdown[key] = event.timeStamp;
+    function _normalize_timestamp(e) { e._ts = Date.now(); };
 
-      if (char_counter.count(key, event.timeStamp)) {
+    function _onkeydown(event) {
+      _normalize_timestamp(event);
+      var key = KEYS[event.which];
+      if (keysdown[key]) return; // Return early if this key is already down
+      keysdown[key] = event._ts;
+
+      if (char_counter.count(key, event._ts)) {
         key = char_counter.code();
       }
 
@@ -187,17 +191,19 @@
     };
 
     function _onkeyup(event) {
-      var key = _KEYS[event.which];
-      event.timeDown = event.timeStamp - keysdown[key];
+      _normalize_timestamp(event);
+      var key = KEYS[event.which];
+      event.timeDown = event._ts - keysdown[key];
       delete keysdown[key];
       _handle_event(event, 'keyup.'+ key);
     };
 
     function _onmousedown(event) {
-      var key = _MOUSE[event.which];
-      keysdown[key] = event.timeStamp;
+      _normalize_timestamp(event);
+      var key = MOUSE[event.which];
+      keysdown[key] = event._ts;
       key = _get_combo() || key;
-      if (char_counter.count(key, event.timeStamp)) {
+      if (char_counter.count(key, event._ts)) {
         key = char_counter.code();
       }
       if (!next_keys || !next_keys[key]) _reset();
@@ -205,15 +211,17 @@
     };
 
     function _onmouseup(event) {
-      var key = _MOUSE[event.which];
-      event.timeDown = event.timeStamp - keysdown[key];
+      _normalize_timestamp(event);
+      var key = MOUSE[event.which];
+      event.timeDown = event._ts - keysdown[key];
       delete keysdown[key];
       _handle_event(event, 'keyup.'+ key);
     };
 
     function _onmousewheel(event) {
+      _normalize_timestamp(event);
       event.scrollDelta = event.detail ? event.detail*(-20) : event.wheelDeltaY;
-      var key           = _MOUSE_WHEEL[event.scrollDelta / Math.abs(event.scrollDelta)];
+      var key           = MOUSE_WHEEL[event.scrollDelta / Math.abs(event.scrollDelta)];
       if (bindings.keys[key] && bindings.keys[key].callback) bindings.keys[key].callback(event);
     };
 
@@ -249,23 +257,27 @@
 
       bindings: function() {
         return bindings;
+      },
+
+      keysdown: function() {
+        return Object.keys(keysdown);
       }
     };
 
   })();
 
-  var _MOUSE = {
+  var MOUSE = {
     1: 'lclick',
     2: 'mclick',
     3: 'rclick'
   };
 
-  var _MOUSE_WHEEL = {
+  var MOUSE_WHEEL = {
     '1':  'wheelup',
     '-1': 'wheeldown'
   };
 
-  var _KEYS = {
+  var KEYS = {
     8:    'backspace',
     9:    'tab',
     12:   'clear',
@@ -354,6 +366,10 @@
     104:  'kp8',
     105:  'kp9'
   };
+
+  Mokey.KEYS        = KEYS;
+  Mokey.MOUSE       = MOUSE;
+  Mokey.MOUSE_WHEEL = MOUSE_WHEEL;
 
   return Mokey;
 

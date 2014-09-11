@@ -1,0 +1,95 @@
+body {
+  font-size: 14px;
+  color: #000;
+  font-family: Arial;
+  line-height: 22px;
+}
+
+p a {
+  margin-left: 20px;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+code {
+  margin-left: 20px;
+  font-family: Courier, monospace;
+  font-size: 12px;
+  line-height: 18px;
+  font-style: normal;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+}
+
+pre, .unit {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  line-height: 18px;
+  overflow: auto;
+  padding: 6px 10px;
+  font-family: Courier, monospace;
+  margin-left: 15px;
+}
+
+#nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 15px 0 30px 30px;
+  border-right: 1px dotted #aaa;
+}
+#nav a {
+  color: #8C2E07;
+  text-decoration: none;
+}
+#nav a:hover {
+  color: #999;
+}
+#nav a.title {
+  display: block;
+  font-size: 16px;
+  text-decoration: underline;
+  margin-top: 20px;
+  color: #8C2E07;
+}
+#nav ul {
+  list-style-type: square;
+}
+#nav ul li {
+
+}
+#content {
+  width: 620px;
+  margin: 40px 0 600px 260px;
+}
+#content h2 {
+  margin-top: 40px;
+}
+#content .method {
+  margin-bottom: 40px;
+}
+#content .method em {
+  font-size: 12px;
+  line-height: 18px;
+  margin-left: 20px;
+}
+#content .method span {
+  display: block;
+  margin-top: 5px;
+}
+
+dl, dt {
+  margin-left: 10px;
+}
+dd {
+  margin: 0 0 10px 30px;
+}
+dl dt {
+  line-height: 18px;
+  font-style: italic;
+}

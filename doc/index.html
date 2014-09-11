@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GridPartition.js - API Docs</title>
+<style type="text/css">
+  @import '../css/style.css';
+</style>
+</head>
+<body>
+  <div id="nav">
+    <a class="title" href="#">Using GridPartition.js</a>
+
+    <a class="title" href="#utility">Utility Methods</a>
+    <ul>
+      <li><a href="#indexOutOfBounds">indexOutOfBounds</a></li>
+      <li><a href="#positionOutOfBounds">positionOutOfBounds</a></li>
+      <li><a href="#indexToPosition">indexToPosition</a></li>
+      <li><a href="#positionToIndex">positionToIndex</a></li>
+    </ul>
+
+    <a class="title" href="#operations">Adding and Removing</a>
+    <ul>
+      <li><a href="#insert">insert</a></li>
+      <li><a href="#remove">remove</a></li>
+    </ul>
+
+    <a class="title" href="#queries">Queries</a>
+    <ul>
+      <li><a href="#getCell">getCell</a></li>
+      <li><a href="#getCells">getCells</a></li>
+      <li><a href="#getAdjacentCells">getAdjacentCells</a></li>
+      <li><a href="#getAdjacentIndices">getAdjacentIndices</a></li>
+      <li><a href="#getLinearIndices">getLinearIndices</a></li>
+      <li><a href="#getResidents">getResidents</a></li>
+    </ul>
+  </div>
+  <div id="content">
+
+    <h2>Including GridPartition.js</h2>
+
+    <p>GridPartition can be loaded through Require.js (AMD), CommonJS or using script tags.</p>
+
+    <p>Require.js</p>
+    <pre>define(['gridpartition'], function(GridPartition) { ... });</pre>
+
+    <p>CommonJS</p>
+    <pre>var GridPartition = require('gridpartition').GridPartition;</pre>
+
+    <p>Script Tag</p>
+    <pre>&lt;script src="gridpartition.js"&gt;&lt;/script&gt;</pre>
+
+    <h2>Creating a new GridPartition instance</h2>
+
+    <pre>
+// This creates a new partition for a screen size of 800x600 pixels
+// with a grid cell size of 20x20 pixels
+var grid = new GridPartition([800, 600], [20, 20]);
+
+/*
+         |--------------------------------------- 800 --------------------------------------------|
+
+  _       -----------------------------------------------------------------------------------------
+  |      | 20x20  |        |        |        |        |        |        |
+  |      |        |        |        |        |        |        |        |
+  |      |        |        |        |        |        |        |        |
+  |      |---------------------------------------------------------------
+  |      |        |        |        |        |        |        |
+  |      |        |        |        |        |        |        |
+  |      |        |        |        |        |        |        |
+  |      |-----------------------------------------------------
+ 600     |        |        |        |        |        |
+  |      |        |        |        |        |        |
+  |      |        |        |        |        |        |
+  |      |---------------------------------------------
+  |      |
+  |      |
+  _      |
+
+*/
+    </pre>
+
+    <h2>Spatial partitioning, in brief.</h2>
+
+    <p></p>
+
+    <h2 id="utility">Utility Methods</h2>
+
+    <div class="method">
+      <p id="indexOutOfBounds">
+        <b>indexOutOfBounds</b>
+        <code>.indexOutOfBounds(index)</code>
+        <span>Check if a cell index is outside of the GridPartition defined area.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+// indices 0 to 8 are valid
+
+grid.indexOutOfBounds(4);      // == false
+grid.indexOutOfBounds(-1);     // == true
+grid.indexOutOfBounds(9);      // == true
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+
+      </pre>
+    </div>
+
+    <div class="method">
+      <p id="positionOutOfBounds">
+        <b>positionOutOfBounds</b>
+        <code>.positionOutOfBounds(position)</code>
+        <span>Check if a position on the grid would be outside of the defined area.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+// positions [0, 0] to [299, 299] are valid
+
+grid.positionOutOfBounds([0, 0]);      // == false
+grid.positionOutOfBounds([299, 299]);  // == false
+grid.positionOutOfBounds([-1, 100]);   // == true
+grid.positionOutOfBounds([300, 300]);  // == true
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+
+      </pre>
+    </div>
+
+
+    <div class="method">
+      <p id="indexToPosition">
+        <b>indexToPosition</b>
+        <code>.indexToPosition(index)</code>
+        <span>Converts a cell index to a 2d array position.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.indexToPosition(0)  // == [0, 0]
+grid.indexToPosition(1)  // == [100, 0]
+grid.indexToPosition(8)  // == [200, 200]
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+      </pre>
+    </div>
+
+
+    <div class="method">
+      <p id="positionToIndex">
+        <b>positionToIndex</b>
+        <code>.positionToIndex(position)</code>
+        <span>Converts an array position into a cell index.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.positionToIndex([15, 75])    // == 0
+grid.positionToIndex([140, 15])   // == 1
+grid.positionToIndex([250, 290])  // == 8
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+      </pre>
+    </div>
+
+
+     <h2 id="operations">Adding and Removing</h2>
+
+     <div class="method">
+      <p id="insert">
+        <b>insert</b>
+        <code>.insert(index, entity)</code>
+        <span>Inserts an entity into the grid at the specified index.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.insert(2, entity);   // inserts the entity into cell 2
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+      </pre>
+    </div>
+
+
+    <div class="method">
+      <p id="remove">
+        <b>remove</b>
+        <code>.remove(index, entity)</code>
+        <span>Removes an entity from a specified cell index.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.remove(2, entity);   // removes the entity from cell 2, if it exists
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+      </pre>
+    </div>
+
+
+    <h2 id="queries">Queries</h2>
+
+    <div class="method">
+      <p id="getCell">
+        <b>getCell</b>
+        <code>.getCell(index)</code>
+        <span>Gets an array of all entities in the specified cell index, or position, which is converted to an index.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.getCell(4); // returns all entities from cell 4
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+      </pre>
+    </div>
+
+
+    <div class="method">
+      <p id="getCells">
+        <b>getCells</b>
+        <code>.getCells(indices)</code>
+        <span>Gets a combined array of entites from all specified cells.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.getCells([0, 2, 3]); // returns all entities from cells 0, 2 and 3
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+      </pre>
+    </div>
+
+    <div class="method">
+      <p id="getAdjacentCells">
+        <b>getAdjacentCells</b>
+        <code>.getAdjacentCells(index)</code>
+        <span>Gets an array of all entities from cells which are immediate neighbors of the specified cell.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.getAdjacentCells(0);      // returns entities in cells, 1, 3, 4
+grid.getAdjacentCells(2);      // returns entities in cells, 1, 4, 5
+grid.getAdjacentCells(4);      // returns entities in cells, 0, 1, 2, 3, 5, 6, 7, 8
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+      </pre>
+    </div>
+
+    <div class="method">
+      <p id="getAdjacentIndices">
+        <b>getAdjacentIndices</b>
+        <code>.getAdjacentIndices(index)</code>
+        <span>Gets an array of all indices which are immediate neighbors of the specified cell.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.getAdjacentIndices(0); // == [1, 3, 4]
+grid.getAdjacentIndices(2); // == [1, 4, 5]
+grid.getAdjacentIndices(4); // == [0, 1, 2, 3, 5, 6, 7, 8]
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+      </pre>
+    </div>
+
+    <div class="method">
+      <p id="getLinearIndices">
+        <b>getLinearIndices</b>
+        <code>.getLinearIndices(index, direction, limit)</code>
+        <span>Returns an array of indices that occur in a straight line from the starting index.</span>
+      </p>
+
+      <span><b>Arguments</b></span>
+      <dl>
+        <dt>index</dt>
+          <dd>The cell index to start at.</dd>
+        <dt>direction</dt>
+          <dd>A 2 element array in the format, [x, y], specifying the direction to travel while collecting indices.</dd>
+          <dd>[1, 0], gets all indices to the right.</dd>
+          <dd>[-1, 0], gets all indices to the left.</dd>
+          <dd>[0, 1], gets all indices down from the index.</dd>
+          <dd>[0, -1], gets all indices up from the index.</dd>
+          <dd>[1, 1], gets all indices diagonally right and down.</dd>
+        <dt>limit</dt>
+          <dd>Only collect this number of indices. Defaults to Infinity.</dd>
+      </dl>
+
+      <pre>
+grid = new GridPartition([500, 500], [100, 100]);
+
+grid.getLinearIndices(0,  [ 1,  0]);    // == [1, 2, 3, 4]
+grid.getLinearIndices(9,  [-1,  0]);    // == [8, 7, 6, 5]
+grid.getLinearIndices(11, [ 0,  1]);    // == [16, 21]
+grid.getLinearIndices(18, [-1, -1]);    // == [12, 6, 0]
+grid.getLinearIndices(20, [ 1, -1], 2); // == [16, 12]
+
+/*
+    0    1    2    3    4
+
+    5    6    7    8    9
+
+    10   11   12   13   14
+
+    15   16   17   18   19
+
+    20   21   22   23   24
+
+*/
+      </pre>
+    </div>
+
+    <div class="method">
+      <p id="getResidents">
+        <b>getResidents</b>
+        <span>Get the map which keeps a count of the entities in each cell.</span>
+      </p>
+      <pre>
+grid = new GridPartition([300, 300], [100, 100]);
+
+grid.insert(1, {});
+grid.insert(1, {});
+grid.insert(4, {});
+
+grid.getResidents();
+
+/*
+  returns
+  {
+    1: 2,   // cell 1 has 2 entities
+    4: 1    // cell 4 has 1 entity
+  }
+*/
+
+/*
+    0   1   2       [0, 0]      [100, 0]      [200, 0]
+
+    3   4   5       [0, 100]    [100, 100]    [200, 100]
+
+    6   7   8       [0, 200]    [100, 200]    [200, 200]
+*/
+
+      </pre>
+    </div>
+
+  </div>
+</body>
+</html>
