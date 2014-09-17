@@ -1,152 +1,259 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Mokey - Keyboard and mouse library.</title>
-  <style type="text/css">
-  #guy {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 40px;
-    background-color: #48a;
-  }
-  pre.highlight {
-    background: none repeat scroll 0 0 #70c6ff;
-  }
-  pre {
-    padding: 5px;
-    transition: background 0.3s ease-in 0.0s;
-  }
-  </style>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Mokey - Keyboard and mouse javascript library</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/site.css" rel="stylesheet">
+
+    <style type="text/css">
+    .mokey-demo pre {
+      padding: 5px;
+      margin: 2px;
+      transition: background 0.3s ease-in 0.0s;
+    }
+    pre.highlight {
+      background: none repeat scroll 0 0 #70c6ff;
+    }
+    .blog-header {
+      text-align: center;
+    }
+    </style>
 </head>
 <body>
 
-  <div id="guy"></div>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+          <a class="blog-nav-item active" href="/">Home</a>
+          <a class="blog-nav-item" href="./doc/index.html">Docs</a>
+          <a class="blog-nav-item" href="./test/index.html">Tests</a>
+          <a class="blog-nav-item" href="./perf/index.html">JS Perf</a>
+        </nav>
+      </div>
+    </div>
 
+    <div class="container">
 
-  <div class="samples">
-    <table>
-      <tr>
-        <td>
-          <pre>
+      <div class="blog-header">
+        <h1 class="blog-title">Mokey.js</h1>
+        <p class="lead blog-description">Keyboard and mouse bindings in javascript</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-12 blog-main">
+
+          <div class="mokey-demo blog-post">
+
+            <!-- -->
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('q', function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-          <pre>
+              </pre>
+            </div>
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('keyup.q', function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-          <pre>
+              </pre>
+            </div>
+
+            <!-- -->
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('qX2', function() {
   highlight();
 });
-          </pre>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <pre>
+              </pre>
+            </div>
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('shift+x+k', function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-          <pre>
+              </pre>
+            </div>
+
+            <!-- -->
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('z x c', function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-          <pre>
+              </pre>
+            </div>
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('a b c shift+x+k', function() {
   highlight();
 });
-          </pre>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <pre>
+              </pre>
+            </div>
+
+            <!-- -->
+            <div class="col-sm-6">
+              <pre>
 Mokey.on(['p', 'w e', 't+y'], function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-          <pre>
-Mokey.on(['lclick', 'rclick'], function() {
-  highlight();
-});
-          </pre>
-        </td>
-        <td>
-          <pre>
+              </pre>
+            </div>
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('lclick+n', function() {
   highlight();
 });
-          </pre>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <pre>
+              </pre>
+            </div>
+
+            <!-- -->
+            <div class="col-sm-6">
+              <pre>
+Mokey.on(['lclick', 'rclick'], function() {
+  highlight();
+});
+              </pre>
+            </div>
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('lclickX2', function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-          <pre>
+              </pre>
+            </div>
+
+            <!-- -->
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('lclickX3', function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-          <pre>
+              </pre>
+            </div>
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('lclickX4', function() {
   highlight();
 });
-          </pre>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <pre>
+              </pre>
+            </div>
+
+            <!-- -->
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('wheelup', function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-          <pre>
+              </pre>
+            </div>
+            <div class="col-sm-6">
+              <pre>
 Mokey.on('wheeldown', function() {
   highlight();
 });
-          </pre>
-        </td>
-        <td>
-
-        </td>
-      </tr>
-    </table>
+              </pre>
+            </div>
   </div>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="./dist/mokey.js"></script>
-<script type="text/javascript">
-$(function(){
+          </div>
 
+          <div class="blog-post">
+            <h2 class="blog-post-title">Sample blog post</h2>
+            <p class="blog-post-meta">January 1, 2014 by <a href="#">Mark</a></p>
+
+            <p>This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
+            <hr>
+            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
+            <blockquote>
+              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </blockquote>
+            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <h2>Heading</h2>
+            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            <h3>Sub-heading</h3>
+            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+            <pre><code>Example code block</code></pre>
+            <p>Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
+            <h3>Sub-heading</h3>
+            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+            <ul>
+              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
+              <li>Donec id elit non mi porta gravida at eget metus.</li>
+              <li>Nulla vitae elit libero, a pharetra augue.</li>
+            </ul>
+            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
+            <ol>
+              <li>Vestibulum id ligula porta felis euismod semper.</li>
+              <li>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</li>
+              <li>Maecenas sed diam eget risus varius blandit sit amet non magna.</li>
+            </ol>
+            <p>Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.</p>
+          </div><!-- /.blog-post -->
+
+          <div class="blog-post">
+            <h2 class="blog-post-title">Another blog post</h2>
+            <p class="blog-post-meta">December 23, 2013 by <a href="#">Jacob</a></p>
+
+            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
+            <blockquote>
+              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </blockquote>
+            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+          </div><!-- /.blog-post -->
+
+          <div class="blog-post">
+            <h2 class="blog-post-title">New feature</h2>
+            <p class="blog-post-meta">December 14, 2013 by <a href="#">Chris</a></p>
+
+            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+            <ul>
+              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
+              <li>Donec id elit non mi porta gravida at eget metus.</li>
+              <li>Nulla vitae elit libero, a pharetra augue.</li>
+            </ul>
+            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
+          </div><!-- /.blog-post -->
+
+          <ul class="pager">
+            <li><a href="#">Previous</a></li>
+            <li><a href="#">Next</a></li>
+          </ul>
+
+        </div><!-- /.blog-main -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <div class="blog-footer">
+      <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </div>
+
+
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="./dist/mokey.js"></script>
+<script src="./vendor/bootstrap.min.js"></script>
+<script src="./vendor/docs.min.js"></script>
+<script>
+$(function(){
   function highlight(id) {
     var el = $('#'+ id);
     el.addClass('highlight');
@@ -156,7 +263,7 @@ $(function(){
   };
 
   var _id=0;
-  $('.samples pre').each(function() {
+  $('.mokey-demo pre').each(function() {
     var $this = $(this);
     var text  = $(this).text();
     var id    = '_'+ (++_id);
@@ -164,30 +271,6 @@ $(function(){
     text = text.replace('highlight()', 'highlight("'+ id +'")');
     eval(text);
   });
-
-  var guy     = $('#guy');
-  var width   = guy.width();
-  var height  = guy.height();
-
-  Mokey.on('right', function(){
-    guy.css('left', parseInt(guy.css('left')) + width);
-  });
-  Mokey.on('up', function(){
-    guy.css('top', parseInt(guy.css('top')) - height);
-  });
-  Mokey.on('left', function(){
-    guy.css('left', parseInt(guy.css('left')) - width);
-  });
-  Mokey.on('down', function(){
-    guy.css('top', parseInt(guy.css('top')) + height);
-  });
-
-/*
-  Mokey.on('mmove', function(event){
-    console.log('moving the mouse');
-  });
-*/
-
 });
 </script>
 
