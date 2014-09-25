@@ -174,8 +174,12 @@
 
     function _onkeydown(event) {
       _normalize_timestamp(event);
+
       var key = KEYS[event.which];
+      var combo;
+
       if (keysdown[key]) return; // Return early if this key is already down
+
       keysdown[key] = event._ts;
 
       if (char_counter.count(key, event._ts)) {
@@ -186,8 +190,7 @@
 
       _handle_event(event, key);
 
-      var combo = _get_combo();
-      if (combo) _handle_event(event, combo);
+      if (combo = _get_combo()) _handle_event(event, combo);
     };
 
     function _onkeyup(event) {
@@ -200,14 +203,21 @@
 
     function _onmousedown(event) {
       _normalize_timestamp(event);
+
       var key = MOUSE[event.which];
+      var combo;
+
       keysdown[key] = event._ts;
-      key = _get_combo() || key;
+
       if (char_counter.count(key, event._ts)) {
         key = char_counter.code();
       }
+
       if (!next_keys || !next_keys[key]) _reset();
+
       _handle_event(event, key);
+
+      if (combo = _get_combo()) _handle_event(event, combo);
     };
 
     function _onmouseup(event) {
