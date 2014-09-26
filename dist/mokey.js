@@ -173,6 +173,8 @@
     function _normalize_timestamp(e) { e._ts = Date.now(); };
 
     function _onkeydown(event) {
+      event.preventDefault();
+
       _normalize_timestamp(event);
 
       var key = KEYS[event.which];
@@ -183,7 +185,7 @@
       keysdown[key] = event._ts;
 
       if (char_counter.count(key, event._ts)) {
-        key = char_counter.code();
+        _handle_event(event, char_counter.code());
       }
 
       if (!next_keys || !next_keys[key]) _reset();
@@ -202,6 +204,8 @@
     };
 
     function _onmousedown(event) {
+      event.preventDefault();
+
       _normalize_timestamp(event);
 
       var key = MOUSE[event.which];
@@ -210,7 +214,7 @@
       keysdown[key] = event._ts;
 
       if (char_counter.count(key, event._ts)) {
-        key = char_counter.code();
+        _handle_event(event, char_counter.code());
       }
 
       if (!next_keys || !next_keys[key]) _reset();
